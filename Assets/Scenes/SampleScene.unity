@@ -309,6 +309,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 447857455}
+  - component: {fileID: 447857456}
   m_Layer: 0
   m_Name: BONE - Shoulder Left
   m_TagString: Untagged
@@ -323,7 +324,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 447857454}
-  m_LocalRotation: {x: 0.000056041874, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0.28, y: 0.538, z: 0.0325}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -331,7 +332,22 @@ Transform:
   - {fileID: 1514329629}
   m_Father: {fileID: 865588775}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0.006, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &447857456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447857454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df366358008acc4d9090cd1af84de07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockAxisX: 0
+  lockAxisY: 0
+  lockAxisZ: 0
 --- !u!1 &503568127
 GameObject:
   m_ObjectHideFlags: 0
@@ -625,7 +641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d99c771685d4c354e827e28709b6852d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1223487113}
+  player: {fileID: 0}
   targetOffset: {x: 0, y: 1, z: 0}
   mouseSensitivityX: 5
   mouseSensitivityY: -5
@@ -873,9 +889,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 887768436}
-  m_LocalRotation: {x: -0.000056041874, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.079000026, y: -0.26800027, z: -0.002469948}
-  m_LocalScale: {x: 0.1437686, y: 0.59377134, z: 0.17705996}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.079000026, y: -0.0024999678, z: 0.26800013}
+  m_LocalScale: {x: 0.1437686, y: 0.5937713, z: 0.17705993}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1358207296}
@@ -1159,7 +1175,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46179f6101bab62429370f05bf2d880e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
+  boneLegLeft: {fileID: 1670942039}
+  boneLegRight: {fileID: 1618300737}
+  walkSpeed: 10
+  gravity: -15
   cam: {fileID: 596909664}
 --- !u!143 &1223487115
 CharacterController:
@@ -1192,6 +1211,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visionDistance: 10
+  roundsPerSecond: 5
+  boneShoulderRight: {fileID: 1358207296}
+  boneShoulderLeft: {fileID: 447857455}
 --- !u!1 &1358207295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,7 +1238,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1358207295}
-  m_LocalRotation: {x: 0.000056041874, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.256, y: 0.538, z: 0.0325}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1224,7 +1246,7 @@ Transform:
   - {fileID: 887768437}
   m_Father: {fileID: 865588775}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0.006, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &1358207297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1237,7 +1259,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df366358008acc4d9090cd1af84de07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimOrientation: 5
+  lockAxisX: 0
+  lockAxisY: 0
+  lockAxisZ: 0
 --- !u!1 &1377742205
 GameObject:
   m_ObjectHideFlags: 0
@@ -1456,9 +1480,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1514329628}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.07699999, y: -0.26999998, z: -0.0024999864}
-  m_LocalScale: {x: 0.1437686, y: 0.59377134, z: 0.17705996}
+  m_LocalRotation: {x: -0.7070672, y: -0, z: -0, w: 0.70714647}
+  m_LocalPosition: {x: -0.07699987, y: -0.0025302172, z: 0.26999983}
+  m_LocalScale: {x: 0.1437686, y: 0.5937713, z: 0.17705993}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 447857455}
@@ -1523,6 +1547,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1578062852}
+  - component: {fileID: 1578062853}
   m_Layer: 0
   m_Name: BONE - Neck
   m_TagString: Untagged
@@ -1548,6 +1573,21 @@ Transform:
   m_Father: {fileID: 865588775}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0.006, y: 0, z: 0}
+--- !u!114 &1578062853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578062851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df366358008acc4d9090cd1af84de07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockAxisX: 0
+  lockAxisY: 0
+  lockAxisZ: 0
 --- !u!1 &1618300736
 GameObject:
   m_ObjectHideFlags: 0
