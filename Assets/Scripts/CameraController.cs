@@ -20,6 +20,8 @@ public class CameraController : MonoBehaviour
     private float yaw = 0;
     private float dollyDis = 10;
 
+    private float shakeTimer = 0;
+
     void Start()
     {
         cam = GetComponentInChildren<Camera>();
@@ -92,20 +94,49 @@ public class CameraController : MonoBehaviour
         if (isAiming)
         {
             Vector3 vToAimTarget = player.target.transform.position - cam.transform.position;
-            Vector3 euler = Quaternion.LookRotation(vToAimTarget).eulerAngles;
+            Quaternion worldRot = Quaternion.LookRotation(vToAimTarget);
+            Quaternion localRot = worldRot;
 
-            euler.y = AnimMath.AngleWrapDegrees(playerYaw, euler.y);
+            if (cam.transform.parent)
+            {
+                localRot = Quaternion.Inverse(cam.transform.parent.rotation) * worldRot;
+            }
 
-            Quaternion temp = Quaternion.Euler(euler.x, euler.y, 0);
+            Vector3 euler = localRot.eulerAngles;
+            euler.z = 0;
+            localRot.eulerAngles = euler;
 
-            cam.transform.rotation = AnimMath.Ease(cam.transform.rotation, temp, .001f);
+            cam.transform.rotation = AnimMath.Ease(cam.transform.rotation, localRot, .001f);
         }
         else
         {
             cam.transform.localRotation = AnimMath.Ease(cam.transform.localRotation, Quaternion.identity, .001f);
         }
+
+        UpdateShake();
+
     }
 
+    void UpdateShake()
+    {
+        if (shakeTimer < 0) return;
+
+        shakeTimer -= Time.deltaTime;
+
+        float p = shakeTimer / 1;
+        p = p * p;
+
+        p = AnimMath.Lerp(1, .98f, p);
+
+        Quaternion randomRot = AnimMath.Lerp(Random.rotation, Quaternion.identity, p);
+
+        cam.transform.localRotation *= randomRot;
+    }
+    public void Shake(float time)
+    {
+        //if (time > shakeTimer) 
+            shakeTimer += time;
+    }
     private void OnDrawGizmos()
     {
         if(!cam) cam = GetComponentInChildren<Camera>();

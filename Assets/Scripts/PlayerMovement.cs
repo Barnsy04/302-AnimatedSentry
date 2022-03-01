@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
 
     public Transform boneLegLeft;
     public Transform boneLegRight;
+    public Transform boneHip;
+    public Transform boneSpine;
 
     public float walkSpeed = 5;
 
@@ -18,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     public Camera cam;
 
     CharacterController pawn;
+    PlayerTargeting targetingScript;
 
     private Vector3 inputDir;
     private float velocityVertical = 0;
@@ -34,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         pawn = GetComponent<CharacterController>();
+        targetingScript = GetComponent<PlayerTargeting>();
     }
 
 
@@ -44,11 +48,27 @@ public class PlayerMovement : MonoBehaviour
         // horizontal movement
         float v = Input.GetAxis("Vertical");
         float h = Input.GetAxis("Horizontal");
-        
 
         bool playerWantsToMove = (v != 0 || h != 0);
 
-        if (cam && playerWantsToMove)
+        bool playerIsAiming = (targetingScript && targetingScript.playerWantsToAim && targetingScript.target);
+
+        if (playerIsAiming)
+        {
+
+            Vector3 toTarget = targetingScript.target.transform.position - transform.position;
+            toTarget.Normalize();
+
+            Quaternion worldRot = Quaternion.LookRotation(toTarget);
+            Vector3 euler = worldRot.eulerAngles;
+            euler.x = 0;
+            euler.y = 0;
+            worldRot.eulerAngles = euler;
+
+            transform.rotation = AnimMath.Ease(transform.rotation, worldRot, .01f);
+
+        }
+        else if (cam && playerWantsToMove)
         {
             // turn player to match camera
             float playerYaw = transform.eulerAngles.y;
@@ -57,10 +77,8 @@ public class PlayerMovement : MonoBehaviour
             while (camYaw > playerYaw + 180) camYaw -= 360;
             while (camYaw < playerYaw - 180) camYaw += 360;
 
-
             Quaternion playerRotation = Quaternion.Euler(0, playerYaw, 0);
             Quaternion targetRotation = Quaternion.Euler(0, camYaw, 0);
-
 
             transform.rotation = AnimMath.Ease(playerRotation, targetRotation, .01f);
         }
@@ -94,8 +112,12 @@ public class PlayerMovement : MonoBehaviour
         {
             cooldownJumpWindow = .5f;
             velocityVertical = 5;
+            WalkAnimation();
         }
-        WalkAnimation();
+        else
+        {
+            AirAnimation();
+        }
     }
 
     void WalkAnimation()
@@ -114,6 +136,16 @@ public class PlayerMovement : MonoBehaviour
         boneLegLeft.localRotation = Quaternion.AngleAxis(wave, axis);
         boneLegRight.localRotation = Quaternion.AngleAxis(-wave, axis);
 
+        if (boneHip)
+        {
+            float walkAmount = axis.magnitude;
+            float offsetY = Mathf.Cos(Time.time * speed) * walkAmount * .05f;
+            boneHip.localPosition = new Vector3(0, offsetY, 0);
+        }
     }
 
+    void AirAnimation()
+    {
+
+    }
 }
